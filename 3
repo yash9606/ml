@@ -1,0 +1,48 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn import datasets
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+import pandas as pd
+
+
+#Load the Iris dataset
+iris = datasets.load_iris()
+X = iris.data # Features(4D)
+Y = iris.target #lABELS
+target_names = iris.target_names
+print(X,Y,target_names)
+
+#Standardize the data
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+#covariance matrix, eigenvalue and eigenvectors are computed internally
+#apply PCA to reduce the dimension from 4 to 2
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
+
+#Convert to Dataframes
+reduced_df = pd.DataFrame(X_pca, columns= ['Principle Component 1', 'Principle Component 2'])
+reduced_df['Target'] = Y
+print(reduced_df.head())
+
+
+
+
+#Plot the reduced data
+plt.figure(figsize=(8,6))
+for target, color, label in zip(range(len(target_names)), ['r' ,'g' , 'b'], target_names):
+    plt.scatter(
+        reduced_df.loc[reduced_df['Target'] == target, 'Principle Component 1'],
+        reduced_df.loc[reduced_df['Target'] == target, 'Principle Component 2'],
+        color= color, alpha=0.6, label=label
+    )
+plt.title('PCA of Iris Dataset (2 Components)', fontsize=16)
+plt.xlabel('Principle Component 1')
+plt.ylabel('Principle Component 2')
+plt.legend()
+plt.grid()
+plt.show()
+print("Eigenvectors:\n", pca.components_)#eigen vector of PC1, PC2
+#Print the explained variance ratio
+print(f'Explained variance ratio: {pca.explained_variance_ratio_}')
