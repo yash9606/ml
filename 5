@@ -1,0 +1,32 @@
+import numpy as np
+from sklearn.neighbors import KNeighborsClassifier
+#Step 1: Generate Random Dataset
+np.random.seed(42) # for reproducibility
+x=np.random.rand(100)
+x
+
+#Step 2:  label the first 50 points
+labels = [1 if val <= 0.5 else 2 for val in x[:50]]
+
+#Training set
+#x[50:] starting from index 50 to the end
+
+x_train = x[:50].reshape(-1,1)
+y_train = labels
+x_train
+
+#Test set the remaining 50 points to classify
+x_test = x[:50].reshape(-1,1)
+x_test
+
+
+#step 3 : k-N classification
+k_values =[1,2,3,4,5,20,30]
+print("k-NN Classification Results:")
+for k in k_values:
+    knn = KNeighborsClassifier(n_neighbors=k)
+    knn.fit(x_train,y_train) #Train the KNN Model
+    y_pred = knn.predict(x_test)
+    #Output the predictions for this K value
+    print(f"\nk = {k}:")
+    print(f"Predicted Classes : {y_pred}")
