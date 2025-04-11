@@ -1,32 +1,22 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.neighbors import KNeighborsClassifier
-#Step 1: Generate Random Dataset
-np.random.seed(42) # for reproducibility
-x=np.random.rand(100)
-x
-
-#Step 2:  label the first 50 points
-labels = [1 if val <= 0.5 else 2 for val in x[:50]]
-
-#Training set
-#x[50:] starting from index 50 to the end
-
-x_train = x[:50].reshape(-1,1)
-y_train = labels
-x_train
-
-#Test set the remaining 50 points to classify
-x_test = x[:50].reshape(-1,1)
-x_test
-
-
-#step 3 : k-N classification
-k_values =[1,2,3,4,5,20,30]
-print("k-NN Classification Results:")
+np.random.seed(42)
+x=np.random.rand(100).reshape(-1,1)
+labels=np.array([1 if xi<=0.5 else 2 for xi in x[:50]])
+k_values=[1,2,3,4,5,20,30]
 for k in k_values:
-    knn = KNeighborsClassifier(n_neighbors=k)
-    knn.fit(x_train,y_train) #Train the KNN Model
-    y_pred = knn.predict(x_test)
-    #Output the predictions for this K value
-    print(f"\nk = {k}:")
-    print(f"Predicted Classes : {y_pred}")
+    knn=KNeighborsClassifier(n_neighbors=k)
+    knn.fit(x[:50],labels)
+    predicted_labels=knn.predict(x[50:])
+    plt.figure(figsize=(8,4))
+    plt.scatter(x[:50],labels,color='blue',label='Training Data')
+    plt.scatter(x[50:],predicted_labels,color='red',label='Predicted Data')
+    plt.xlabel('x values')
+    plt.ylabel('class')
+    plt.title(f'KNN classification with k={k}')
+    plt.legend()
+    plt.savefig("hello")
+    plt.show()
+    print(f'For k={k}, Predicted labels: ')
+    print(predicted_labels)
